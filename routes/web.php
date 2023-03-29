@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +17,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::post('user/login',[ LoginController::class, 'loginUser'])->name('loginUser');
+Route::get('user',[ LoginController::class, 'login'])->name('login');
+
+
+
+Auth::routes();
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('register/users',[ RegisterController::class, 'register'])->name('register');
+Route::get('register/users',[ RegisterController::class, 'viewRegister'])->name('viewRegister');
+
+
+
+
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+  
+
+
 });
