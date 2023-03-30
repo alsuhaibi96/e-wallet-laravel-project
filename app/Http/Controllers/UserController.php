@@ -14,14 +14,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
 
-    /**
-     * Redirect authenticated user
-     */
-
-     public function loginAuthUser(Request $request)
-     {
-        
-     }
+   
     /**
      * Display a listing of the resource.
      *

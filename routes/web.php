@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogoutController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,13 +21,13 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 Route::post('user/login',[ LoginController::class, 'loginUser'])->name('loginUser');
-Route::get('user',[ LoginController::class, 'login'])->name('login');
+Route::get('user/login',[ LoginController::class, 'login'])->name('login');
+Route::get('user/dashboard',[ HomeController::class, 'userDashboard'])->name('userDashboard');
 
 
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('register/users',[ RegisterController::class, 'register'])->name('register');
 Route::get('register/users',[ RegisterController::class, 'viewRegister'])->name('viewRegister');
 
@@ -32,9 +35,18 @@ Route::get('register/users',[ RegisterController::class, 'viewRegister'])->name(
 
 
 Route::group(['middleware' => ['auth']], function() {
+    Route::group(['middleware' => ['role:Admin']], function ()
+     {
+
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-  
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
+      });
 
+      /**
+   * Logout Route
+   */
+   Route::get('/logout', [LogoutController::class,'perform'])->name('logout.perform');
+ 
 });
